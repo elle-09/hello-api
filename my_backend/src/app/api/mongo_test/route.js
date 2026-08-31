@@ -1,6 +1,6 @@
-import corsHeaders from "@/lib/cors";
+import corsHeaders from "../../../lib/cors";
 
-import { getClientPromise } from "@/lib/mongodb";
+import { getClientPromise } from "../../../lib/mongodb";
 
 import { NextResponse } from "next/server";
 

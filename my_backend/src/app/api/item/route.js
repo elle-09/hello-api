@@ -1,7 +1,7 @@
 // src/app/api/item/route.js
 
-import { getClientPromise } from "@/lib/mongodb";
-import { errorResponse, printExceptionLog, successResponse } from "@/lib/utils";
+import { getClientPromise } from "../../../lib/mongodb";
+import { errorResponse, printExceptionLog, successResponse } from "../../../lib/utils";
 
 export async function GET(request) {
   try {

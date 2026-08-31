@@ -1,10 +1,18 @@
 // src/app/api/item/[item_id]/route.js
+import corsHeaders from "../../../../lib/cors";
 
-import { getClientPromise } from "@/lib/mongodb";
+import { getClientPromise } from "../../../../lib/mongodb";
 
-import { errorResponse, printExceptionLog, successResponse } from "@/lib/utils";
+import { errorResponse, printExceptionLog, successResponse } from "../../../../lib/utils";
 
 import { ObjectId } from "mongodb";
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
 
 export async function GET(request, { params }) {
   const { item_id } = await params;
