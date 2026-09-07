@@ -24,16 +24,10 @@ export function UserProvider({ children }) {
     }); 
     if (result.ok) { 
       const data = await result.json(); 
-
       console.log("==>user data: ", data); 
-
       setUser(data.user); 
       setIsLoggedIn(true); 
-    }else {
-      setUser(null);
-      setIsLoggedIn(false);
-    }
-    
+    } 
     setIsInitializing(false); 
   }; 
 
@@ -46,9 +40,6 @@ export function UserProvider({ children }) {
     console.log("==>Login body: ", body); 
     const result = await fetch(`${API_URL}/api/auth/login`, { 
       method: "POST", 
-      headers: {
-      "Content-Type": "application/json",
-      },
       credentials: "include", 
       body: JSON.stringify(body), 
     }); 
