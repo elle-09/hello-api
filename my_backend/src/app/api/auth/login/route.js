@@ -65,6 +65,7 @@ function checkAdmin(email, password) {
       _id: "-1", 
       email: email, 
       username: "admin", 
+      role: "ADMIN",
     }; 
   return false; 
 } 
@@ -82,7 +83,7 @@ async function checkUser(email, password) {
       return false; 
     } else return user; 
   } catch (error) { 
-    console.log("exception", exception.toString()); 
+    console.log("exception", error.toString()); 
   } 
 } 
 
@@ -92,6 +93,7 @@ function getJwtToken(user) {
       id: String(user._id), 
       email: user.email, 
       username: user.username, 
+      role: user.role || "USER",
     }, 
     JWT_SECRET, 
     { expiresIn: "7d" }, 

@@ -8,12 +8,10 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box"; 
 import { useContext, useEffect } from "react"; 
 import { UserContext } from "./context/UserContext"; 
-
-const API_URL = import.meta.env.VITE_API_URL; 
  
 export default function Home() { 
   const navigate = useNavigate(); 
-  const { user, isLoggedIn, isInitializing } = useContext(UserContext); 
+  const { user, isLoggedIn, isInitializing, logout, } = useContext(UserContext); 
  
   useEffect(() => { 
     if (!isLoggedIn && !isInitializing) { 
@@ -21,15 +19,19 @@ export default function Home() {
     } 
   }, [isLoggedIn,isInitializing,navigate]); 
 
-  if (isInitializing) return <></>; 
+  if (isInitializing) {
+    return <></>;
+  }
 
   return ( 
     <div> 
       <AppBar position="static"> 
         <Toolbar> 
+
           <Typography variant="h5" sx={{ flexGrow: 1 }}> 
             My Frontend 1.0 
           </Typography> 
+
           <Button 
             color="inherit" 
             onClick={() => { 
@@ -38,7 +40,7 @@ export default function Home() {
           >
             Item 
           </Button> 
-          {user?.id == "-1" && ( 
+          {user?.role === "ADMIN" && ( 
             <Button 
               color="inherit" 
               onClick={() => { 
@@ -48,19 +50,16 @@ export default function Home() {
               User 
             </Button> 
           )} 
-          <Button 
-            color="inherit" 
-            onClick={async () => { 
-              const result = await fetch(`${API_URL}/api/auth/logout`, { 
-                credentials: "include", 
-              }); 
-              if (result.ok) { 
-                window.location.reload(true); 
-              } 
-            }} 
-          > 
-            Logout 
-          </Button> 
+          {/* LOGOUT */}
+          <Button
+            color="inherit"
+            onClick={async () => {
+              await logout();
+            }}
+          >
+            Logout
+          </Button>
+          
         </Toolbar> 
       </AppBar> 
       <Box sx={{ px: 2, pt: 2 }}> 

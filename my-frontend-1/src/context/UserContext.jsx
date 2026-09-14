@@ -92,10 +92,19 @@ export function UserProvider({ children }) {
   };
 
   const logout = async () => {
-    const result = await fetch(`${API_URL}/api/auth/logout`, {
-      method: "GET",
-      credentials: "include",
-    });
+    try {
+      const result = await fetch(`${API_URL}/api/auth/logout`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (result.ok) {
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.log("Logout error:", error);
+    }
   };
 
   return (
