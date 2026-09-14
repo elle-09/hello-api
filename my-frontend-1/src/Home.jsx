@@ -10,17 +10,19 @@ import { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext"; 
 
 const API_URL = import.meta.env.VITE_API_URL; 
-
+ 
 export default function Home() { 
   const navigate = useNavigate(); 
   const { user, isLoggedIn, isInitializing } = useContext(UserContext); 
+ 
   useEffect(() => { 
     if (!isLoggedIn && !isInitializing) { 
-      navigate("/login");
-    }
-  }, [isInitializing]); 
+      navigate("/login"); 
+    } 
+  }, [isLoggedIn,isInitializing,navigate]); 
+
   if (isInitializing) return <></>; 
- 
+
   return ( 
     <div> 
       <AppBar position="static"> 
@@ -33,9 +35,19 @@ export default function Home() {
             onClick={() => { 
               navigate("/item"); 
             }} 
-          > 
+          >
             Item 
           </Button> 
+          {user?.id == "-1" && ( 
+            <Button 
+              color="inherit" 
+              onClick={() => { 
+                navigate("/user"); 
+              }} 
+            > 
+              User 
+            </Button> 
+          )} 
           <Button 
             color="inherit" 
             onClick={async () => { 
@@ -45,7 +57,6 @@ export default function Home() {
               if (result.ok) { 
                 window.location.reload(true); 
               } 
-
             }} 
           > 
             Logout 

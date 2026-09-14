@@ -12,11 +12,17 @@ const adminUser = process.env.ADMIN_USER;
 const adminPass = process.env.ADMIN_PASS; 
 const DB_NAME = process.env.DB_NAME; 
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
+
 export async function POST(req) { 
   const data = await req.json(); 
   const { email, password } = data; 
   console.log("stored email : ", email)
-  console.log("stored pass : ", password)
 
   if (!email || !password) { 
     return errorResponse("Missing email or password", 400); 
@@ -32,6 +38,7 @@ export async function POST(req) {
     const response = NextResponse.json( 
       { 
         message: "Login successful", 
+        user: user,
       }, 
       { 
         status: 200, 
@@ -82,7 +89,7 @@ async function checkUser(email, password) {
 function getJwtToken(user) { 
   const token = jwt.sign( 
     { 
-      id: user._id, 
+      id: String(user._id), 
       email: user.email, 
       username: user.username, 
     }, 

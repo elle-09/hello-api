@@ -5,7 +5,7 @@ let corsHeaders = {
 
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", 
 
-  "Access-Control-Allow-Headers": "Content-Type, Authorization", 
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-user-id, x-user-username, x-user-email", 
 
   "Access-Control-Max-Age": "86400",  
 };  

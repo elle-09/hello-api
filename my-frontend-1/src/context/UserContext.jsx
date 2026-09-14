@@ -1,84 +1,116 @@
-//src/context/UseContext.jsx 
+//src/context/UseContext.jsx
 
-import { createContext, useEffect, useRef, useState } from "react"; 
+import { createContext, useEffect, useRef, useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL; 
-export const UserContext = createContext(); 
-export function UserProvider({ children }) { 
-  const isInit = useRef(false); 
-  const [user, setUser] = useState(null); 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
-  const [loginErrorMsg, setLoginErrorMsg] = useState(""); 
-  const [isLogInError, setIsLoginError] = useState(false); 
-  const [isInitializing, setIsInitializing] = useState(true); 
+const API_URL = import.meta.env.VITE_API_URL;
+export const UserContext = createContext();
+export function UserProvider({ children }) {
+  const isInit = useRef(false);
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginErrorMsg, setLoginErrorMsg] = useState("");
+  const [isLogInError, setIsLoginError] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
-  useEffect(() => { 
-    if (isInit.current) return;
-    isInit.current = true; 
-    me(); 
-  }, []); 
+  useEffect(() => {
+    if (isInit.current) return;
+    isInit.current = true;
+    me();
+  }, []);
 
-  const me = async () => { 
-    const result = await fetch(`${API_URL}/api/me`, { 
-      credentials: "include", 
-    }); 
-    if (result.ok) { 
-      const data = await result.json(); 
-      console.log("==>user data: ", data); 
-      setUser(data.user); 
-      setIsLoggedIn(true); 
-    } 
-    setIsInitializing(false); 
-  }; 
+  const me = async () => {
+    try {
+      const result = await fetch(`${API_URL}/api/me`, {
+        method: "GET",
+        credentials: "include",
+      });
 
-  const login = async (email, password) => { 
-    const body = { 
-      email: email, 
-      password: password, 
-    }; 
+      if (result.ok) {
+        const data = await result.json();
 
-    console.log("==>Login body: ", body); 
-    const result = await fetch(`${API_URL}/api/auth/login`, { 
-      method: "POST", 
-      credentials: "include", 
-      body: JSON.stringify(body), 
-    }); 
+        console.log("==> user data:", data);
 
-    if (result.ok) { 
-      const data = await result.json(); 
-      setUser(data.user); 
-      setIsLoggedIn(true); 
-      return true; 
-    } else { 
-      const errData = await result.json(); 
-      console.log("==>Login failed: ", errData.message); 
-      setIsLoggedIn(false); 
-      setIsLoginError(true); 
-      setLoginErrorMsg(errData.message); 
-      return false; 
-    } 
-  }; 
+        setUser(data.user);
+        setIsLoggedIn(true);
+      } else {
+        console.log("==> /api/me failed:", result.status);
 
-  const logout = async () => { 
-    const result = await fetch(`${API_URL}/api/auth/logout`, { 
-      method: "GET", 
-      credentials: "include", 
-    }); 
-  }; 
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.log("==> /api/me error:", error);
 
-  return ( 
-    <UserContext.Provider 
-      value={{ 
-        user, 
-        login, 
-        logout, 
-        isLoggedIn, 
-        isLogInError, 
-        loginErrorMsg, 
-        isInitializing, 
-      }} 
-    > 
-      {children} 
-    </UserContext.Provider> 
-  ); 
-} 
+      setUser(null);
+      setIsLoggedIn(false);
+    }
+
+    setIsInitializing(false);
+  };
+  //   const me = async () => {
+  //     const result = await fetch(`${API_URL}/api/me`, {
+  //       credentials: "include",
+  //     });
+  //     if (result.ok) {
+  //       const data = await result.json();
+  //       console.log("==>user data: ", data);
+  //       setUser(data);
+  //       setIsLoggedIn(true);
+  //     }
+  //     setIsInitializing(false);
+  //   };
+
+  const login = async (email, password) => {
+    const body = {
+      email: email,
+      password: password,
+    };
+
+    console.log("==>Login body: ", body);
+    const result = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (result.ok) {
+      const data = await result.json();
+      setUser(data.user);
+      setIsLoggedIn(true);
+      return true;
+    } else {
+      const errData = await result.json();
+      console.log("==>Login failed: ", errData.message);
+      setIsLoggedIn(false);
+      setIsLoginError(true);
+      setLoginErrorMsg(errData.message);
+      return false;
+    }
+  };
+
+  const logout = async () => {
+    const result = await fetch(`${API_URL}/api/auth/logout`, {
+      method: "GET",
+      credentials: "include",
+    });
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isLoggedIn,
+        isLogInError,
+        loginErrorMsg,
+        isInitializing,
+      }}
+    >
+            {children}   {" "}
+    </UserContext.Provider>
+  );
+}

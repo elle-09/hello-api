@@ -1,6 +1,7 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import Item from "./Item";
+import User from "./User";
 import LoginPage from "./Login";
 
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />}>
           <Route path="item" element={<Item />} />
+          <Route path="user" element={<User />} />
         </Route>
 
         <Route path="/login" element={<LoginPage />} />

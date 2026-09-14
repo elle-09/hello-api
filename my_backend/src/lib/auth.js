@@ -1,9 +1,9 @@
 //src/lib/auth.js 
 
 import jwt from "jsonwebtoken"; 
-import { X_HEADER_USER_ID } from "./constant"; 
 
 const JWT_SECRET = process.env.JWT_SECRET; 
+
 export function verifyJWT(req) { 
   try { 
     const token = req.cookies.get("token")?.value; 
@@ -13,6 +13,7 @@ export function verifyJWT(req) {
     } 
 
     const decoded = jwt.verify(token, JWT_SECRET); 
+
     return decoded; 
   } catch (err) { 
     console.log("==>Verify Token Exception"); 
@@ -22,9 +23,13 @@ export function verifyJWT(req) {
 } 
  
 export function isAdmin(request) { 
-  const headers = request.headers; 
-  const userId = Number(headers.get(X_HEADER_USER_ID)); 
-  return userId == -1; 
+  const user = verifyJWT(request);
+
+  if (!user) {
+    return false;
+  }
+
+  return String(user.id || user._id) === "-1";
 } 
 
  
